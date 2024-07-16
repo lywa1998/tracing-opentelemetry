@@ -161,12 +161,10 @@ fn many_events(c: &mut Criterion) {
 
     {
         let provider = TracerProvider::builder()
-            .with_config(Config::default().with_span_limits(
-                SpanLimits {
-                    max_events_per_span: 1000,
-                    ..SpanLimits::default()
-                }
-            ))
+            .with_config(Config::default().with_span_limits(SpanLimits {
+                max_events_per_span: 1000,
+                ..SpanLimits::default()
+            }))
             .build();
         let tracer = provider.tracer("bench");
         let otel_layer = tracing_opentelemetry::layer()
