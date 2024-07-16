@@ -5,7 +5,7 @@ use opentelemetry_sdk::{
         Aggregation, Instrument, MeterProviderBuilder, PeriodicReader, SdkMeterProvider, Stream,
     },
     runtime,
-    trace::{BatchConfig, RandomIdGenerator, Sampler, Tracer},
+    trace::{BatchConfig, RandomIdGenerator, Sampler, TracerProvider},
     Resource,
 };
 use opentelemetry_semantic_conventions::{
@@ -14,7 +14,7 @@ use opentelemetry_semantic_conventions::{
 };
 use tracing_core::Level;
 use tracing_opentelemetry::{MetricsLayer, OpenTelemetryLayer};
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use tracing_subscriber::layer::SubscriberExt;
 
 // Create a Resource that captures information about the entity for which telemetry is recorded.
 fn resource() -> Resource {
@@ -92,7 +92,7 @@ fn init_meter_provider() -> SdkMeterProvider {
 }
 
 // Construct Tracer for OpenTelemetryLayer
-fn init_tracer() -> Tracer {
+fn init_tracer() -> TracerProvider {
     opentelemetry_otlp::new_pipeline()
         .tracing()
         .with_trace_config(

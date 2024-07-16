@@ -34,13 +34,11 @@ fn test_tracer() -> (
     let exporter = TestExporter::default();
     let provider = TracerProvider::builder()
         .with_simple_exporter(exporter.clone())
-        .with_config(Config {
-            span_limits: SpanLimits {
+        .with_config(Config::default().with_span_limits(SpanLimits {
                 max_events_per_span: u32::MAX,
                 ..SpanLimits::default()
-            },
-            ..Config::default()
-        })
+            }
+        ))
         .build();
     let tracer = provider.tracer("test");
 

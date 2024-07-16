@@ -6,9 +6,9 @@ use opentelemetry_sdk::{
             AggregationSelector, DefaultAggregationSelector, DefaultTemporalitySelector,
             MetricReader, TemporalitySelector,
         },
-        InstrumentKind, ManualReader, MeterProviderBuilder, SdkMeterProvider,
+        AttributeSet, InstrumentKind, ManualReader, MeterProviderBuilder, SdkMeterProvider,
     },
-    AttributeSet, Resource,
+    Resource,
 };
 
 use std::{fmt::Debug, sync::Arc};
@@ -654,7 +654,7 @@ where
 
                         if let Some(expected_attributes) = self.expected_attributes.as_ref() {
                             sum.data_points.iter().for_each(|data_point| {
-                                assert_eq!(expected_attributes, &data_point.attributes,)
+                                assert_eq!(expected_attributes, &AttributeSet::from(data_point.attributes.as_slice()))
                             });
                         }
                     }
@@ -672,7 +672,7 @@ where
 
                         if let Some(expected_attributes) = self.expected_attributes.as_ref() {
                             gauge.data_points.iter().for_each(|data_point| {
-                                assert_eq!(expected_attributes, &data_point.attributes,)
+                                assert_eq!(expected_attributes, &AttributeSet::from(data_point.attributes.as_slice()))
                             });
                         }
                     }
@@ -684,7 +684,7 @@ where
                         assert_eq!(histogram_data.sum, self.expected_value);
 
                         if let Some(expected_attributes) = self.expected_attributes.as_ref() {
-                            assert_eq!(expected_attributes, &histogram_data.attributes);
+                            assert_eq!(expected_attributes, &AttributeSet::from(histogram_data.attributes.as_slice()));
                         }
                     }
                     unexpected => {
